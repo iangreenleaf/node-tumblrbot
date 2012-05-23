@@ -30,6 +30,21 @@ describe "tumblr api", ->
         t.request (data) ->
           assert.deepEqual response.response, data
           done()
+      it "takes type as param", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts/photo?api_key=#{apiKey}")
+          .reply(200, response)
+        t.request "photo", success done
+      it "takes options as param", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}&limit=1")
+          .reply(200, response)
+        t.request {limit: 1}, success done
+      it "takes type and options as params", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts/photo?api_key=#{apiKey}&limit=1")
+          .reply(200, response)
+        t.request "photo", {limit: 1}, success done
 
   describe "errors", ->
     network = null

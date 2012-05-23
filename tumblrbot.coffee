@@ -13,13 +13,16 @@ class TumblrBot
     tumblr[type] options, (error, response) ->
 
   request: (type, options, cb) ->
-    unless options? or cb?
-      cb = type
-      type = "posts"
-      options = {}
-    else if not cb?
-      cb = options
-      options = {}
+    switch typeof type
+      when "function"
+        [ type, options, cb ] = [ null, null, type ]
+      when "object"
+        [ type, options, cb ] = [ null, type, options ]
+      else
+        [ options, cb ] = [ null, options] unless cb?
+
+    type ?= "posts"
+    options ?= {}
 
     @tumblr[type] options, (err, response) =>
       if err?
