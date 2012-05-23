@@ -46,6 +46,34 @@ describe "tumblr api", ->
           .reply(200, response)
         t.request "photo", {limit: 1}, success done
 
+    describe "random", ->
+      response =
+        meta: { status: 200, msg: "OK" }
+        response:
+          blog:
+            title: "Foo Bar"
+            posts: 333
+          posts: [
+            { id: 2222, post_url: "http://foo.bar.com/post/2222" }
+          ]
+          total_posts: 56
+      beforeEach ->
+        Math.__old_random = Math.random
+        Math.random = -> 0.625
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}&limit=1")
+          .reply(200, response)
+          .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}&limit=1&offset=34")
+          .reply(200, response)
+      afterEach ->
+        Math.random = Math.__old_random
+      it "fires", (done) ->
+        t.random success done
+      it "returns single post", (done) ->
+        t.random (data) ->
+          assert.deepEqual response.response.posts.pop(), data
+          done()
+
   describe "errors", ->
     network = null
     never_called = ->
