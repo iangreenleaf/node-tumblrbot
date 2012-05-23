@@ -39,38 +39,39 @@ describe "tumblr api", ->
       network = nock("http://api.tumblr.com")
         .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}")
     it "complains about bad response", (done) ->
-      network.reply(401, message: "Bad credentials")
+      network.reply 401,
+        meta: { status: 401, msg: "Not Authorized" }
+        response: []
       mock_robot.onError = (msg) ->
-        assert.ok /bad credentials/i.exec msg
+        assert.ok /not authorized/i.exec msg
         done()
       t.request never_called
     it "complains about client errors", (done) ->
-      return
-      mock = {
-        header: -> mock,
-        get: () -> (cb) ->
-          cb new Error "Kablooie!"
-      }
-      http = require "scoped-http-client"
-      http._old_create = http.create
-      http.create = -> mock
+      http = t.tumblr
+      http._old_posts = http.posts
+      http.posts = (_..., cb) ->
+        cb new Error "Kablooie!"
       mock_robot.onError = (msg) ->
         assert.ok /kablooie/i.exec msg
         done()
       t.request never_called
-      http.create = http._old_create
+      http.posts = http._old_posts
 
     describe "without robot given", ->
+      unattached_t = null
       before ->
-        gh = require("..")
+        unattached_tumblr = require("..")
+        unattached_t = unattached_tumblr.domain "foo.bar.com"
       it "complains to stderr", (done) ->
         util = require "util"
         util._old_error = util.error
         util.error = (msg) ->
-          if msg.match /bad credentials/i
+          if msg.match /not authorized/i
             util.error = util._old_error
             done()
           else
             @_old_error.call process.stderr, msg
-        network.reply(401, message: "Bad credentials")
-        t.request never_called
+        network.reply 401,
+          meta: { status: 401, msg: "Not Authorized" }
+          response: []
+        unattached_t.request never_called

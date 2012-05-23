@@ -1,4 +1,5 @@
 Tumblr = require("tumblr").Tumblr
+util = require "util"
 
 class TumblrBot
   constructor: (@logger) ->
@@ -33,7 +34,6 @@ tumblrbot[method] = func for method,func of TumblrBot.prototype
 
 tumblrbot.logger = {
   error: (msg) ->
-    util = require "util"
     util.error "ERROR: #{msg}"
   debug: ->
 }
