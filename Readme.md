@@ -23,17 +23,32 @@ tumblr = require('tumblrbot')
 
 ## Use ##
 
-Make requests against the [Tumblr API] and receive the `response` object:
+```coffeescript
+# Get the latest 3 posts
+tumblr.posts("funblog.tumblr.com").last 3, (data) ->
+  console.log post.title for post in data.posts
+```
+
+The following options are available to help you filter by post type:
+`posts`, `text`, `quote`, `link`, `answer`, `video`, `audio`, `photo`.
 
 ```coffeescript
-tumblr.domain("funblog.tumblr.com").request "photos", limit: 3, (data) ->
+# Get the most recent video post
+tumblr.video("funblog.tumblr.com").last (data) ->
+  console.log data.posts[0].title
+```
+
+You can pass any options specified in the [Tumblr API]:
+
+```coffeescript
+tumblr.posts("funblog.tumblr.com").last 2, { tag: "potatoes" }, (data) ->
   console.log post.title for post in data.posts
 ```
 
 Get a random photo post:
 
 ```coffeescript
-tumblr.domain("funblog.tumblr.com").random "photos", (post) ->
+tumblr.photo("funblog.tumblr.com").random (post) ->
   console.log post.photos[0].original_size.url
 ```
 
