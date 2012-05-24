@@ -1,6 +1,5 @@
 [ tumblrbot, assert, nock, mock_robot ] = require "./test_helper"
 process.env.HUBOT_TUMBLR_API_KEY = apiKey = "789abc"
-t = tumblrbot.domain "foo.bar.com"
 
 describe "tumblr api", ->
   describe "general purpose", ->
@@ -21,30 +20,31 @@ describe "tumblr api", ->
           ]
           total_posts: 111
       beforeEach ->
-        network = nock("http://api.tumblr.com")
-          .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}")
-          .reply(200, response)
-      it "fires", (done) ->
-        t.request success done
-      it "returns data", (done) ->
-        t.request (data) ->
-          assert.deepEqual response.response, data
-          done()
-      it "takes type as param", (done) ->
-        network = nock("http://api.tumblr.com")
-          .get("/v2/blog/foo.bar.com/posts/photo?api_key=#{apiKey}")
-          .reply(200, response)
-        t.request "photo", success done
-      it "takes options as param", (done) ->
+        @t = tumblrbot.posts "foo.bar.com"
         network = nock("http://api.tumblr.com")
           .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}&limit=1")
           .reply(200, response)
-        t.request {limit: 1}, success done
-      it "takes type and options as params", (done) ->
+      it "fires", (done) ->
+        @t.last success done
+      it "returns data", (done) ->
+        @t.last (data) ->
+          assert.deepEqual response.response, data
+          done()
+      it "takes number as param", (done) ->
         network = nock("http://api.tumblr.com")
-          .get("/v2/blog/foo.bar.com/posts/photo?api_key=#{apiKey}&limit=1")
+          .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}&limit=3")
           .reply(200, response)
-        t.request "photo", {limit: 1}, success done
+        @t.last 3, success done
+      it "takes options as param", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}&tag=foo&limit=1")
+          .reply(200, response)
+        @t.last {tag: "foo"}, success done
+      it "takes number and options as params", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}&tag=foo&limit=9")
+          .reply(200, response)
+        @t.last 9, {tag: "foo"}, success done
 
     describe "random", ->
       response =

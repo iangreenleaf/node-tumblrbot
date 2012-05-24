@@ -2,11 +2,8 @@ Tumblr = require("tumblr").Tumblr
 util = require "util"
 
 class TumblrBot
-  constructor: (@logger) ->
-
-  domain: (@domain) ->
+  constructor: (@domain, @logger) ->
     @tumblr = new Tumblr @domain, process.env.HUBOT_TUMBLR_API_KEY
-    @
 
   random: (type, options, cb) ->
     #TODO duplication
@@ -27,26 +24,28 @@ class TumblrBot
       @request type, options, (data) ->
         cb data.posts[0]
 
-  request: (type, options, cb) ->
-    switch typeof type
+  last: (number, options, cb) ->
+    switch typeof number
       when "function"
-        [ type, options, cb ] = [ null, null, type ]
+        [ number, options, cb ] = [ null, null, number ]
       when "object"
-        [ type, options, cb ] = [ null, type, options ]
+        [ number, options, cb ] = [ null, number, options ]
       else
         [ options, cb ] = [ null, options] unless cb?
 
-    type ?= "posts"
+    number ?= 1
     options ?= {}
+    options.limit ?= number
 
-    @tumblr[type] options, (err, response) =>
+    @tumblr["posts"] options, (err, response) =>
       if err?
         @logger.error err
       else
         cb response
 
 module.exports = tumblrbot = (robot) ->
-  new TumblrBot robot.logger
+  posts: (domain) ->
+    new TumblrBot domain, robot.logger
 
 tumblrbot[method] = func for method,func of TumblrBot.prototype
 
