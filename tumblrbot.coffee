@@ -39,13 +39,17 @@ class TumblrBot
     @last 1, options, (data) ->
       cb data.posts?[0]
 
-module.exports = tumblrbot = (robot) ->
+class TumblrBotApi
+  constructor: (@logger) ->
   posts: (domain) ->
-    new TumblrBot domain, robot.logger
+    new TumblrBot domain, @logger
 
-tumblrbot[method] = func for method,func of TumblrBot.prototype
+module.exports = tumblrBotBuilder = (robot) ->
+  new TumblrBotApi robot.logger
 
-tumblrbot.logger = {
+tumblrBotBuilder[method] = func for method,func of TumblrBotApi.prototype
+
+tumblrBotBuilder.logger = {
   error: (msg) ->
     util.error "ERROR: #{msg}"
   debug: ->
