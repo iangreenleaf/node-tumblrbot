@@ -71,6 +71,7 @@ describe "tumblr api", ->
           ]
           total_posts: 56
       beforeEach ->
+        @t = tumblrbot.posts "foo.bar.com"
         Math.__old_random = Math.random
         Math.random = -> 0.625
         network = nock("http://api.tumblr.com")
@@ -81,9 +82,9 @@ describe "tumblr api", ->
       afterEach ->
         Math.random = Math.__old_random
       it "fires", (done) ->
-        t.random success done
+        @t.random success done
       it "returns single post", (done) ->
-        t.random (data) ->
+        @t.random (data) ->
           assert.deepEqual response.response.posts.pop(), data
           done()
 
@@ -92,8 +93,9 @@ describe "tumblr api", ->
     never_called = ->
       assert.fail(null, null, "Success callback should not be invoked")
     beforeEach ->
+      @t = tumblrbot.posts "foo.bar.com"
       network = nock("http://api.tumblr.com")
-        .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}")
+        .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}&limit=1")
     it "complains about bad response", (done) ->
       network.reply 401,
         meta: { status: 401, msg: "Not Authorized" }
@@ -101,23 +103,23 @@ describe "tumblr api", ->
       mock_robot.onError = (msg) ->
         assert.ok /not authorized/i.exec msg
         done()
-      t.request never_called
+      @t.last never_called
     it "complains about client errors", (done) ->
-      http = t.tumblr
+      http = @t.tumblr
       http._old_posts = http.posts
       http.posts = (_..., cb) ->
         cb new Error "Kablooie!"
       mock_robot.onError = (msg) ->
         assert.ok /kablooie/i.exec msg
         done()
-      t.request never_called
+      @t.last never_called
       http.posts = http._old_posts
 
     describe "without robot given", ->
       unattached_t = null
       before ->
         unattached_tumblr = require("..")
-        unattached_t = unattached_tumblr.domain "foo.bar.com"
+        unattached_t = unattached_tumblr.posts "foo.bar.com"
       it "complains to stderr", (done) ->
         util = require "util"
         util._old_error = util.error
@@ -130,4 +132,4 @@ describe "tumblr api", ->
         network.reply 401,
           meta: { status: 401, msg: "Not Authorized" }
           response: []
-        unattached_t.request never_called
+        unattached_t.last never_called

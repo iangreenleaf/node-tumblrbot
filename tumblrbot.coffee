@@ -5,24 +5,15 @@ class TumblrBot
   constructor: (@domain, @logger) ->
     @tumblr = new Tumblr @domain, process.env.HUBOT_TUMBLR_API_KEY
 
-  random: (type, options, cb) ->
+  random: (options, cb) ->
     #TODO duplication
-    switch typeof type
-      when "function"
-        [ type, options, cb ] = [ null, null, type ]
-      when "object"
-        [ type, options, cb ] = [ null, type, options ]
-      else
-        [ options, cb ] = [ null, options] unless cb?
-    type ?= "posts"
+    [ options, cb ] = [ null, options] unless cb?
     options ?= {}
-    options.limit ?= 1
-    @request type, options, (data) =>
+    @last options, (data) =>
       total_posts = data.total_posts
       offset = Math.round((total_posts - 1) * Math.random())
       options.offset = offset
-      @request type, options, (data) ->
-        cb data.posts[0]
+      @one options, cb
 
   last: (number, options, cb) ->
     switch typeof number
