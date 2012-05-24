@@ -43,6 +43,11 @@ class TumblrBot
       else
         cb response
 
+  one: (options, cb) ->
+    [ options, cb ] = [ null, options] unless cb?
+    @last 1, options, (data) ->
+      cb data.posts?[0]
+
 module.exports = tumblrbot = (robot) ->
   posts: (domain) ->
     new TumblrBot domain, robot.logger

@@ -46,6 +46,19 @@ describe "tumblr api", ->
           .reply(200, response)
         @t.last 9, {tag: "foo"}, success done
 
+      describe "one", ->
+        it "fires", (done) ->
+          @t.one success done
+        it "returns data", (done) ->
+          @t.one (data) ->
+            assert.deepEqual response.response.posts[0], data
+            done()
+        it "takes options as param", (done) ->
+          network = nock("http://api.tumblr.com")
+            .get("/v2/blog/foo.bar.com/posts?api_key=#{apiKey}&tag=foo&limit=1")
+            .reply(200, response)
+          @t.one {tag: "foo"}, success done
+
     describe "random", ->
       response =
         meta: { status: 200, msg: "OK" }

@@ -36,6 +36,10 @@ The following options are available to help you filter by post type:
 # Get the most recent video post
 tumblr.video("funblog.tumblr.com").last (data) ->
   console.log data.posts[0].title
+
+# Or get it without the array
+tumblr.video("funblog.tumblr.com").one (post) ->
+  console.log post.title
 ```
 
 You can pass any options specified in the [Tumblr API]:
