@@ -87,6 +87,13 @@ describe "tumblr api", ->
         @t.random (data) ->
           assert.deepEqual response.response.posts.pop(), data
           done()
+      it "works with post types", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts/photo?api_key=#{apiKey}&limit=1")
+          .reply(200, response)
+          .get("/v2/blog/foo.bar.com/posts/photo?api_key=#{apiKey}&limit=1&offset=34")
+          .reply(200, response)
+        tumblrbot.photos("foo.bar.com").random success done
 
     describe "post type", ->
       response =
