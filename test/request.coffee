@@ -88,6 +88,53 @@ describe "tumblr api", ->
           assert.deepEqual response.response.posts.pop(), data
           done()
 
+    describe "post type", ->
+      response =
+        meta: { status: 200, msg: "OK" }
+        response:
+          blog:
+            title: "Foo Bar"
+            posts: 333
+          posts: [
+            { id: 2222, post_url: "http://foo.bar.com/post/2222" }
+          ]
+          total_posts: 56
+      it "text", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts/text?api_key=#{apiKey}&limit=1")
+          .reply 200, response
+        tumblrbot.text("foo.bar.com").one success done
+      it "quote", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts/quote?api_key=#{apiKey}&limit=1")
+          .reply 200, response
+        tumblrbot.quote("foo.bar.com").one success done
+      it "link", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts/link?api_key=#{apiKey}&limit=1")
+          .reply 200, response
+        tumblrbot.link("foo.bar.com").one success done
+      it "answer", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts/answer?api_key=#{apiKey}&limit=1")
+          .reply 200, response
+        tumblrbot.answer("foo.bar.com").one success done
+      it "video", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts/video?api_key=#{apiKey}&limit=1")
+          .reply 200, response
+        tumblrbot.video("foo.bar.com").one success done
+      it "audio", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts/audio?api_key=#{apiKey}&limit=1")
+          .reply 200, response
+        tumblrbot.audio("foo.bar.com").one success done
+      it "photo", (done) ->
+        network = nock("http://api.tumblr.com")
+          .get("/v2/blog/foo.bar.com/posts/photo?api_key=#{apiKey}&limit=1")
+          .reply 200, response
+        tumblrbot.photo("foo.bar.com").one success done
+
   describe "errors", ->
     network = null
     never_called = ->

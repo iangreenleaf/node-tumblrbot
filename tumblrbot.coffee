@@ -1,8 +1,9 @@
 Tumblr = require("tumblr").Tumblr
 util = require "util"
+_ = require "underscore"
 
 class TumblrBot
-  constructor: (@domain, @logger) ->
+  constructor: (@domain, @logger, @options) ->
     @tumblr = new Tumblr @domain, process.env.HUBOT_TUMBLR_API_KEY
 
   random: (options, cb) ->
@@ -26,6 +27,7 @@ class TumblrBot
 
     number ?= 1
     options ?= {}
+    options = _.defaults options, @options
     options.limit ?= number
 
     @tumblr["posts"] options, (err, response) =>
@@ -41,8 +43,14 @@ class TumblrBot
 
 class TumblrBotApi
   constructor: (@logger) ->
-  posts: (domain) ->
-    new TumblrBot domain, @logger
+  posts: (domain, options) ->
+    new TumblrBot domain, @logger, options
+
+for type in [ "text", "quote", "link", "answer", "video", "audio", "photo" ]
+  do (type) ->
+    TumblrBotApi.prototype[type] = (domain, options={}) ->
+      options.type = type
+      @posts domain, options
 
 module.exports = tumblrBotBuilder = (robot) ->
   new TumblrBotApi robot.logger
