@@ -48,7 +48,7 @@ class TumblrBotApi
 
 for type in [ "text", "quote", "link", "answer", "video", "audio", "photo" ]
   do (type) ->
-    TumblrBotApi.prototype[type] = (domain, options={}) ->
+    TumblrBotApi.prototype[type] = TumblrBotApi.prototype["#{type}s"] = (domain, options={}) ->
       options.type = type
       @posts domain, options
 

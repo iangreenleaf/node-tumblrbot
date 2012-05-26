@@ -37,6 +37,10 @@ The following options are available to help you filter by post type:
 tumblr.video("funblog.tumblr.com").last (data) ->
   console.log data.posts[0].title
 
+# Or use the plural form (it's just an alias)
+tumblr.videos("funblog.tumblr.com").last (data) ->
+  console.log data.posts[0].title
+
 # Or get it without the array
 tumblr.video("funblog.tumblr.com").one (post) ->
   console.log post.title
