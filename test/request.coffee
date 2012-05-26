@@ -99,69 +99,17 @@ describe "tumblr api", ->
             { id: 2222, post_url: "http://foo.bar.com/post/2222" }
           ]
           total_posts: 56
-      describe "text", (done) ->
-        beforeEach ->
-          network = nock("http://api.tumblr.com")
-            .get("/v2/blog/foo.bar.com/posts/text?api_key=#{apiKey}&limit=1")
-            .reply 200, response
-        it "has singular", (done) ->
-          tumblrbot.text("foo.bar.com").one success done
-        it "has plural", (done) ->
-          tumblrbot.texts("foo.bar.com").one success done
-      describe "quote", (done) ->
-        beforeEach ->
-          network = nock("http://api.tumblr.com")
-            .get("/v2/blog/foo.bar.com/posts/quote?api_key=#{apiKey}&limit=1")
-            .reply 200, response
-        it "has singular", (done) ->
-          tumblrbot.quote("foo.bar.com").one success done
-        it "has plural", (done) ->
-          tumblrbot.quotes("foo.bar.com").one success done
-      describe "link", (done) ->
-        beforeEach ->
-          network = nock("http://api.tumblr.com")
-            .get("/v2/blog/foo.bar.com/posts/link?api_key=#{apiKey}&limit=1")
-            .reply 200, response
-        it "has singular", (done) ->
-          tumblrbot.link("foo.bar.com").one success done
-        it "has plural", (done) ->
-          tumblrbot.links("foo.bar.com").one success done
-      describe "answer", (done) ->
-        beforeEach ->
-          network = nock("http://api.tumblr.com")
-            .get("/v2/blog/foo.bar.com/posts/answer?api_key=#{apiKey}&limit=1")
-            .reply 200, response
-        it "has singular", (done) ->
-          tumblrbot.answer("foo.bar.com").one success done
-        it "has plural", (done) ->
-          tumblrbot.answers("foo.bar.com").one success done
-      describe "video", (done) ->
-        beforeEach ->
-          network = nock("http://api.tumblr.com")
-            .get("/v2/blog/foo.bar.com/posts/video?api_key=#{apiKey}&limit=1")
-            .reply 200, response
-        it "has singular", (done) ->
-          tumblrbot.video("foo.bar.com").one success done
-        it "has plural", (done) ->
-          tumblrbot.videos("foo.bar.com").one success done
-      describe "audio", (done) ->
-        beforeEach ->
-          network = nock("http://api.tumblr.com")
-            .get("/v2/blog/foo.bar.com/posts/audio?api_key=#{apiKey}&limit=1")
-            .reply 200, response
-        it "has singular", (done) ->
-          tumblrbot.audio("foo.bar.com").one success done
-        it "has plural", (done) ->
-          tumblrbot.audios("foo.bar.com").one success done
-      describe "photo", (done) ->
-        beforeEach ->
-          network = nock("http://api.tumblr.com")
-            .get("/v2/blog/foo.bar.com/posts/photo?api_key=#{apiKey}&limit=1")
-            .reply 200, response
-        it "has singular", (done) ->
-          tumblrbot.photo("foo.bar.com").one success done
-        it "has plural", (done) ->
-          tumblrbot.photos("foo.bar.com").one success done
+      for type in [ "text", "quote", "link", "answer", "video", "audio", "photo" ]
+        do (type) ->
+          describe type, (done) ->
+            beforeEach ->
+              network = nock("http://api.tumblr.com")
+                .get("/v2/blog/foo.bar.com/posts/#{type}?api_key=#{apiKey}&limit=1")
+                .reply 200, response
+            it "has singular", (done) ->
+              tumblrbot[type]("foo.bar.com").one success done
+            it "has plural", (done) ->
+              tumblrbot["#{type}s"]("foo.bar.com").one success done
 
   describe "errors", ->
     network = null
