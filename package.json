@@ -13,7 +13,7 @@
     "test": "make test"
   },
   "engines": {
-    "node": ">=0.4.7 <0.7.0"
+    "node": ">=0.4.7"
   },
   "dependencies": {
     "tumblr": "0.0.4"
