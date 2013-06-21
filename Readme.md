@@ -64,6 +64,9 @@ tumblr.photo("funblog.tumblr.com").random (post) ->
 
 If `process.env.HUBOT_TUMBLR_API_KEY` is present, you're automatically authenticated. Sweet!
 
+For many requests, it's enough for this to be the OAuth Consumer Key for your app - no need to
+go through the whole authorization process.
+
 ## Helpful Hubot ##
 
 Hubot will log errors if a request fails.
