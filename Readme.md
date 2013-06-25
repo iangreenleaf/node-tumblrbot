@@ -2,6 +2,12 @@
 
 [![Build Status]](http://travis-ci.org/iangreenleaf/tumblrbot)
 
+Tumblrbot is a simple API client for Tumblr.
+
+It's useful in Hubot scripts. Here are a couple examples: [pizza.coffee] and [gifsanity.coffee].
+
+It's also perfectly usable in any other Node environment. I'd love to hear how you end up using it.
+
 ## Install ##
 
     npm install tumblrbot
@@ -73,3 +79,5 @@ Hubot will log errors if a request fails.
 
 [Tumblr API]: http://www.tumblr.com/docs/en/api/v2
 [Build Status]: https://secure.travis-ci.org/iangreenleaf/tumblrbot.png?branch=master
+[pizza.coffee]: https://github.com/github/hubot-scripts/blob/6ee1c78caaefdedbfeba78c8baf223745b2fa4da/src/scripts/pizza.coffee
+[gifsanity.coffee]: https://github.com/github/hubot-scripts/blob/edb4d78683c56bc571cd12d64af1ec796d8536c2/src/scripts/gifsanity.coffee
