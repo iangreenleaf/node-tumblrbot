@@ -78,6 +78,6 @@ go through the whole authorization process.
 Hubot will log errors if a request fails.
 
 [Tumblr API]: http://www.tumblr.com/docs/en/api/v2
-[Build Status]: https://secure.travis-ci.org/iangreenleaf/tumblrbot.png?branch=master
+[Build Status]: https://api.travis-ci.org/iangreenleaf/node-tumblrbot.png?branch=master
 [pizza.coffee]: https://github.com/github/hubot-scripts/blob/6ee1c78caaefdedbfeba78c8baf223745b2fa4da/src/scripts/pizza.coffee
 [gifsanity.coffee]: https://github.com/github/hubot-scripts/blob/edb4d78683c56bc571cd12d64af1ec796d8536c2/src/scripts/gifsanity.coffee
