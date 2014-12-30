@@ -1,6 +1,6 @@
 # A Hubot-compatible Tumblr API wrapper for Node.js #
 
-[![Build Status]](http://travis-ci.org/iangreenleaf/tumblrbot)
+[![Build Status]](http://travis-ci.org/iangreenleaf/node-tumblrbot)
 
 Tumblrbot is a simple API client for Tumblr.
 
@@ -33,7 +33,7 @@ tumblr = require('tumblrbot')
 # Get the latest 3 posts
 tumblr.posts("funblog.tumblr.com").last 3, (data) ->
   console.log post.title for post in data.posts
-```
+```git@github.com:iangreenleaf/node-tumblrbot.git
 
 The following options are available to help you filter by post type:
 `posts`, `text`, `quote`, `link`, `answer`, `video`, `audio`, `photo`.
